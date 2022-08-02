@@ -30,3 +30,7 @@ services:
     build: ./e2e_test_client
     depends_on:
       - bet_maker
+    environment:
+      bet_maker_url: http://bet_maker:8000
+      line_provider_url: http://line_provider:8001
+
