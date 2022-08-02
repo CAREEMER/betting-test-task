@@ -25,3 +25,8 @@ services:
     environment:
       line_provider_url: http://line_provider:8001
       redis_dsn: redis://redis:6379
+
+  e2e_test_client:
+    build: ./e2e_test_client
+    depends_on:
+      - bet_maker
