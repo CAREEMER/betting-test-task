@@ -12,7 +12,7 @@ def coefficient_factory() -> decimal.Decimal:
 
 
 def deadline_factory() -> datetime:
-    delta_in_seconds = timedelta(seconds=random.randint(10000, 20000))
+    delta_in_seconds = timedelta(seconds=random.randint(60, 600))
 
     return datetime.now() + delta_in_seconds
 

@@ -9,5 +9,4 @@ class BetMaker:
         update_bets_url_path = f"/update-bets/{event_id}/?state={state}"
 
         async with aiohttp.ClientSession() as session:
-            async with session.post(app_settings.bet_maker_url + update_bets_url_path) as response:
-                print(await response.text())
+            await session.post(app_settings.bet_maker_url + update_bets_url_path)
