@@ -12,15 +12,15 @@ def coefficient_factory() -> decimal.Decimal:
 
 
 def deadline_factory() -> datetime:
-    delta_in_seconds = timedelta(seconds=random.randint(600, 1000))
+    delta_in_seconds = timedelta(seconds=random.randint(10000, 20000))
 
     return datetime.now() + delta_in_seconds
 
 
 class EventState(str, enum.Enum):
     PENDING = "PENDING"
-    WIN = "WIN"
-    LOSE = "LOSE"
+    FIRST_COMMAND_WIN = "FIRST_COMMAND_WIN"
+    FIRST_COMMAND_LOSE = "FIRST_COMMAND_LOSE"
 
 
 class Event(BaseModel):

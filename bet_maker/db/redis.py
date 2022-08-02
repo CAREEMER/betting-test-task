@@ -4,7 +4,7 @@ import aioredis
 import orjson
 
 from core.settings import app_settings
-from schemas.bet import Bet, BetCreate
+from schemas.bet import Bet, BetCreate, BetResult
 
 
 class RedisDB:
@@ -19,13 +19,14 @@ class RedisDB:
         await self.redis_conn.set(f"{self.key_prefix}:{bet.event_id}:{bet.bet_id}", bet.json())
 
     async def create_bet(self, bet: BetCreate):
-        bet_data = bet.dict()
         bet_id = str(uuid4())
+
+        bet_data = bet.dict()
         bet_data["amount"] = str(bet_data["amount"])
         bet_data["bet_id"] = bet_id
 
         await self.redis_conn.set(
-            f"{self.key_prefix}:{bet.event_id}:{bet_id}", orjson.dumps(bet_data, orjson.OPT_SERIALIZE_UUID)
+            f"{self.key_prefix}:{bet.event_id}:{bet_id}", orjson.dumps(bet_data, orjson.OPT_SERIALIZE_UUID),
         )
 
     async def list_bets(self):
@@ -42,7 +43,8 @@ class RedisDB:
 
         for key in event_bets_keys:
             bet = await self.get_bet(key)
-            bet.state = state
+            result = BetResult.WIN if state == bet.prediction else BetResult.LOSE
+            bet.bet_result = result
             await self.save_bet(bet)
 
 

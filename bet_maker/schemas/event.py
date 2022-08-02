@@ -7,8 +7,8 @@ from pydantic import UUID4, BaseModel
 
 class EventState(str, enum.Enum):
     PENDING = "PENDING"
-    WIN = "WIN"
-    LOSE = "LOSE"
+    FIRST_COMMAND_WIN = "FIRST_COMMAND_WIN"
+    FIRST_COMMAND_LOSE = "FIRST_COMMAND_LOSE"
 
 
 class Event(BaseModel):

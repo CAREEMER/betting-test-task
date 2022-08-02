@@ -14,11 +14,11 @@ app = FastAPI()
 
 
 @app.get("/events", response_model=List[Event])
-async def list_events() -> List[Event]:
-    return await LineProvider().get_events()
+async def list_events(only_available: bool = False) -> List[Event]:
+    return await LineProvider().get_events(only_available)
 
 
-@app.post("/bet")
+@app.post("/bet", description="Make a bet on a pending event.")
 async def create_bet(_=Depends(BetHandler.create_bet)):
     return Response(status_code=status.HTTP_201_CREATED)
 
@@ -34,6 +34,11 @@ async def update_bets(_=Depends(BetHandler.update_bets)):
     """ Method for line_provider microservice to update bet entries related to the changed event. """
 
     return Response(status_code=status.HTTP_202_ACCEPTED)
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    await RedisDB().redis_conn.flushdb()
 
 
 if __name__ == "__main__":

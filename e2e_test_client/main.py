@@ -1,5 +1,6 @@
-import httpx
 import random
+
+import httpx
 
 from settings import app_settings
 
@@ -15,11 +16,12 @@ def get_events():
     return events
 
 
-def bet_on_event(event_id: str):
+def bet_on_event(event_id: str, prediction: str):
     create_bet_url = "/bet"
     data = {
         "event_id": event_id,
-        "amount": 100.51
+        "amount": 100.51,
+        "prediction": prediction,
     }
 
     response = httpx.post(app_settings.bet_maker_url + create_bet_url, json=data)
@@ -39,7 +41,7 @@ def get_bets():
 
 
 def update_event_state(event_id: str):
-    state = random.choice(["WIN", "LOSE"])
+    state = random.choice(["FIRST_COMMAND_WIN", "FIRST_COMMAND_LOSE"])
     change_event_url = f"/event/{event_id}?state={state}"
 
     response = httpx.patch(app_settings.line_provider_url + change_event_url)
@@ -51,12 +53,12 @@ def run_e2e_test():
     events = get_events()
 
     event = random.choice(events)
-    bet_on_event(event["event_id"])
+    bet_on_event(event["event_id"], "FIRST_COMMAND_WIN")
     get_bets()
     update_event_state(event["event_id"])
     updated_bet = get_bets()
 
-    assert updated_bet[0]["state"] != "PENDING"
+    assert updated_bet[0]["bet_result"] != "PENDING"
 
 
 if __name__ == "__main__":
