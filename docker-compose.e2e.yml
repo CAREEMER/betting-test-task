@@ -1,0 +1,27 @@
+version: '3.3'
+
+services:
+  redis:
+    image: redis:6.2.5
+    restart: on-failure
+    healthcheck:
+      test: redis-cli ping
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  line_provider:
+    build: ./line_provider
+    restart: on-failure
+    environment:
+      bet_maker_url: http://bet_maker:8000
+
+  bet_maker:
+    build: ./bet_maker
+    restart: on-failure
+    depends_on:
+      - redis
+      - line_provider
+    environment:
+      line_provider_url: http://line_provider:8001
+      redis_dsn: redis://redis:6379
