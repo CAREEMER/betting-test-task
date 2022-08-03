@@ -24,9 +24,8 @@ async def create_bet(_=Depends(BetHandler.create_bet)):
 
 
 @app.get("/bets", response_model=List[Bet])
-async def list_bets(redis_db: RedisDB = Depends(get_redis)):
-    # TODO: replace with service
-    return await redis_db.list_bets()
+async def list_bets():
+    return await BetHandler.list_bets()
 
 
 @app.post("/update-bets/{event_id}/")

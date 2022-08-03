@@ -20,3 +20,7 @@ class BetHandler:
         state: Prediction, event_id: UUID4 = Path(), redis_db: RedisDB = Depends(get_redis),
     ):
         await redis_db.update_bets(str(event_id), state)
+
+    @staticmethod
+    async def list_bets():
+        return await RedisDB().list_bets()
